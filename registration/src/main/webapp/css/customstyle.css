@@ -1,0 +1,48 @@
+.rightside{
+	margin-top:10%;
+	margin-right:4%;
+}
+div.leftside{
+	padding-top : 5%;	
+	margin-right:3.5%;
+}
+.login-div{
+	margin-right:3.5%;
+}
+.info{
+	margin-top:4%;
+	margin-left:4%;
+}
+div.register-image{
+	max-width:15%;
+}
+div.content div.address{
+	margin:1%;
+	padding:1%;
+	border:1px solid black
+}
+.navbar {
+      font-family: Montserrat, sans-serif;
+      margin-bottom: 0;
+      background-color: #00bcd4;
+      border: 0;
+      font-size: 11px;
+      letter-spacing: 4px;
+      opacity: 1;
+ }
+.navbar li a, .navbar .navbar-brand { 
+  color: #ffff;
+}
+.navbar-collapse .navbar-nav li a{
+	color: #ffff;
+}
+.navbar-nav li a:hover {
+  color: #fff;
+}
+.navbar-nav li.active a {
+  color: #fff;
+  background-color: #29292c	;
+}
+.navbar-default .navbar-toggle {
+  border-color: transparent;
+}
