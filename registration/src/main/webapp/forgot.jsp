@@ -16,25 +16,9 @@
 </head>
 
 <body class="dashboard-page">
-	<nav class="navbar navbar-inverse navbar-fixed-top">
-	  <div class="container">
-		<div class="navbar-header">
-		  <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
-			<span class="icon-bar"></span>
-			<span class="icon-bar"></span>
-			<span class="icon-bar"></span>                        
-		  </button>
-		  <a class="navbar-brand" href="#myPage">Logo</a>
-		</div>
-		<div class="collapse navbar-collapse" id="myNavbar">
-		  <ul class="nav navbar-nav navbar-right">
-			<li><a href="#"></a></li>
-			<li style="padding-top:2%"><a href="register.jsp" class="btn btn-primary">Sign Up</a></li>
-			<li style="padding-top:2%"><a href="index.jsp" class="btn btn-primary">Login</a><li>
-		  </ul> 
-		</div>
-	  </div>
-	</nav>
+	
+	<jsp:include page="header.jsp" />
+	
 	<section class="wrapper scrollable">
 		<div class="rightside">
 			
@@ -54,12 +38,6 @@
 									<span class="glyphicon form-control-feedback" aria-hidden="true"></span>
 									<span class="help-block with-errors"></span>
 								</div>
-								Mobile No.* :
-								<div class="form-group has-feedback">
-									<input type="number" data-toggle="validator" min="0" data-minlength="10" class="form-control" name="mobileNo" id="inputMobile" placeholder="Mobile No" data-error="Invalid mobile No" required="">
-									<span class="glyphicon form-control-feedback" aria-hidden="true"></span>
-									<span class="help-block with-errors"></span>
-								</div>
 								<div class="form-group">
 									<button type="submit" class="btn btn-primary disabled">Submit</button>
 								</div>
@@ -70,13 +48,13 @@
 				</div>
 			<!-- footer -->
 			<div class="footer">
-				<p>Â© 2018 . All Rights Reserved . Design by</p>
+				<p>© 2018. All Rights Reserved. Design by</p>
 			</div>
 			<!-- //footer -->
 		</div>
 	</section>
 	
-	<script src="js/jquery2.0.3.min.js"></script>
+	<script src="js/jquery3.1.1.js"></script>
 	<script src="js/modernizr.js"></script>
 	<script src="js/jquery.cookie.js"></script>
 	<script src="js/bootstrap.js"></script>
@@ -90,15 +68,8 @@
 
 				// Exemple 1
 				$('.valida').valida();
-				
-				// setup the partial validation
-				$('#partial-1').on('click', function( ev ) {
-					ev.preventDefault();
-					$('#res-1').click(); // clear form error msgs
-					$('form').valida('partial', '#field-1'); // validate only field-1
-					$('form').valida('partial', '#field-1-3'); // validate only field-1-3
-				});			
-			})
+						
+			});
 		</script>
 		<!-- //input-forms -->
 		<!--validator js-->

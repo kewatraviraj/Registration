@@ -8,7 +8,6 @@
 <link href="css/style.css" rel='stylesheet' type='text/css' />
 <link href="css/font-awesome.css" rel="stylesheet"> 
 <link href="css/customstyle.css" rel="stylesheet">
-<link href="css/detailstyle.css" rel='stylesheet' type='text/css' />
 </head>
 <body>
 

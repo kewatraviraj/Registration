@@ -43,9 +43,12 @@ public class ControllerUser extends HttpServlet {
 		// TODO Auto-generated method stub
 		try {
 			if(request.getParameter("action").equals("get")) {
-				request.setAttribute("user", serviceget.getUser(Integer.parseInt(request.getParameter("userid"))));
+				User user = serviceget.getUser(Integer.parseInt(request.getParameter("userid")));
+				request.setAttribute("user", user);
+				request.setAttribute("addresses", serviceget.getAddress( user.getUser_id()));
+				request.setAttribute("files", serviceget.getfile(user.getUser_id()));
 				
-				request.getRequestDispatcher("view.jsp").forward(request, response);
+				request.getRequestDispatcher("register.jsp").forward(request, response);
 				
 			}else if(request.getParameter("action").equals("delete")) {
 				request.setAttribute("user", servicesave.del(Integer.parseInt(request.getParameter("userid"))));	

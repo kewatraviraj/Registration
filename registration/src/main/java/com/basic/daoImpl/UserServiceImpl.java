@@ -55,7 +55,7 @@ public class UserServiceImpl implements UserService {
 	public String getPass(User user) throws ClassNotFoundException, SQLException, IOException {
 		// TODO Auto-generated method stub
 		Statement stmt = Database.getConnection().createStatement();
-		ResultSet result = stmt.executeQuery("select password from userdata where email='"+ user.getEmail()+"' and mobile_no="+user.getMobile_no());
+		ResultSet result = stmt.executeQuery("select password from userdata where email='"+ user.getEmail()+"'");
 		String password = null;
 		if(result.next()){
 			password = result.getString(1);

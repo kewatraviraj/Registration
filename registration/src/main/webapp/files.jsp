@@ -27,72 +27,17 @@
 	
 	<section class="wrapper scrollable">
 		<div class="rightside">
-			<div class="row info leftside">
-					<a href="operation?action=get&&userid=<c:out value='${sessionScope.user.user_id }' />">
-						<div class="bg-info mb-2 text-white well well-lg col-sm-3 col-sm-offset-1">My Details</div>
-					</a>
-					<a href="useraddress?userid=<c:out value='${sessionScope.user.user_id }' />">
-						<div class="bg-info mb-2 text-white well well-lg col-sm-3 col-sm-offset-1">My Address</div>
-					</a>
-					<a href="userfile?userid=<c:out value='${sessionScope.user.user_id }' />">
-						<div class="bg-info mb-2 text-white well well-lg col-sm-3 col-sm-offset-1">My Files</div>
-					</a>
-				</div>
-			<c:if test='${sessionScope.user.user_id == 1}'>
-			<div class="social grid">
-				<div class="grid-info">
-					<div class="col-md-3 top-comment-grid">
-						<a href="save?action=users">
-						<div class="comments likes">	
-							<div class="comments-info likes-info">
-								<h3>Users</h3>	
-							</div>
-							<div class="clearfix"> </div>
-						</div>
-						</a>
-					</div>
-					<div class="col-md-3 top-comment-grid">
-						<a href="save?action=addresses">
-						<div class="comments">
-							<div class="comments-info">
-								<h3>Addresses</h3>
-							</div>
-							<div class="clearfix"> </div>
-						</div>
-						</a>
-					</div>
-					<div class="col-md-3 top-comment-grid">
-						<a href="save?action=files">
-						<div class="comments tweets">
-							<div class="comments-info tweets-info">
-								<h3>Files</h3>
-							</div>
-							<div class="clearfix"> </div>
-						</div>
-						</a>
-					</div>
-					<div class="col-md-3 top-comment-grid">
-						<a href="">
-						<div class="comments views">
-							<div class="comments-info views-info">
-								<h3></h3>
-							</div>
-							<div class="clearfix"> </div>
-						</div>
-						</a>
-					</div>
-					<div class="clearfix"> </div>
-				</div>
-			</div>	
-			</c:if>
+		
+			<jsp:include page="dashboardContent.jsp" />
+			
 			<div class="table-wrapper table-responsive">
 			<table id="myTable" class="table table-bordered table-striped table-responsive-md text-center">
 				<thead>
 					<tr>
-						<th class="">FileId</th>
-						<th class="">File</th>
+						<th>FileId</th>
+						<th>File</th>
 						<th>Created Time</th>
-						<th>Action</th>
+						
 					</tr>
 				</thead>
 				<tbody>
@@ -103,9 +48,7 @@
 							<td><img src="data:image/jpeg;base64,${filedetail.filestring }" height:='100px'; width='100px'></td>
 						</c:if>
 						<td><c:out value="${filedetail.created_time }"></c:out></td>
-						<td style="text-align:center;">
-							<a hef="" class="btn btn-warning">Delete</a>
-						</td>
+						
 					</tr>
 					</c:forEach>
 				</tbody>
@@ -119,33 +62,12 @@
 		</div>
 	</section>
 	
-	<script src="js/jquery2.0.3.min.js"></script>
-	<script src="js/modernizr.js"></script>
-	<script src="js/jquery.cookie.js"></script>
-	<script src="js/bootstrap.js"></script>
-	<!-- input-forms -->
-		<script type="text/javascript" src="js/valida.2.1.6.min.js"></script>
-		<script type="text/javascript" >
-			$(document).ready(function() {
-
-				// show Valida's version.
-				$('#version').valida( 'version' );
-
-				// Exemple 1
-				$('.valida').valida();
-				
-				// setup the partial validation
-				$('#partial-1').on('click', function( ev ) {
-					ev.preventDefault();
-					$('#res-1').click(); // clear form error msgs
-					$('form').valida('partial', '#field-1'); // validate only field-1
-					$('form').valida('partial', '#field-1-3'); // validate only field-1-3
-				});
-			})
-		</script>
-		<!-- //input-forms -->
+		<script src="js/jquery3.1.1.min.js"></script>
+		<script src="js/modernizr.js"></script>
+		<script src="js/jquery.cookie.js"></script>
+		<script src="js/bootstrap.js"></script>
+		
 		<!--validator js-->
-		<script src="js/validator.min.js"></script>
 		<script src="js/customvalidate.js"></script>
 		<!--//validator js-->
 		

@@ -20,8 +20,10 @@ public interface DaoSave {
 	
 	public int saveuser(User Value1) throws ClassNotFoundException, SQLException, IOException;
 	public boolean saveaddress(Address Value2) throws ClassNotFoundException, SQLException, IOException;
-	public int savefile(Files Value3, Part img) throws ClassNotFoundException, SQLException, IOException;
+	public int savefile(Files Value3) throws ClassNotFoundException, SQLException, IOException;
 	public boolean savefilemap(Filemap Value4)throws ClassNotFoundException, SQLException, IOException;
 	
-	public boolean del(int i) throws ClassNotFoundException, SQLException, IOException;
+	public boolean del(int id) throws ClassNotFoundException, SQLException, IOException;
+	public boolean deleteAddress(String id) throws ClassNotFoundException, SQLException, IOException;
+
 }

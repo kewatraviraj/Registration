@@ -91,14 +91,11 @@ public class DaoGetImpl implements DaoGetAll{
 			file = new Files();
 			file.setFile_id(result.getInt(1));
 			file.setFile_type(result.getString(2));
-			file.setFile(result.getBlob(3));
 			file.setCreated_time(result.getString(4));
 			file.setUpdate_by(result.getInt(5));
 			file.setUpdate_time(result.getString(6));
 			
-			int blobLength = (int) result.getBlob(3).length();
-			byte[] blobAsBytes = result.getBlob(3).getBytes(1, blobLength);
-			file.setFilestring(Base64.getEncoder().encodeToString(blobAsBytes));
+			file.setFilestring(Base64.getEncoder().encodeToString(result.getBytes(3)));
 			
 			allfiles.add(file);
 		}
@@ -192,12 +189,10 @@ public class DaoGetImpl implements DaoGetAll{
 			file = new Files();
 			file.setFile_id(results.getInt(1));
 			file.setFile_type(results.getString(2));
-			file.setFile(results.getBlob(3));
+			file.setFile(results.getBinaryStream(3));
 			file.setCreated_time(results.getString(4));
 			
-			int blobLength = (int) results.getBlob(3).length();
-			byte[] blobAsBytes = results.getBlob(3).getBytes(1, blobLength);
-			file.setFilestring(Base64.getEncoder().encodeToString(blobAsBytes));
+			file.setFilestring(Base64.getEncoder().encodeToString(results.getBytes(3)));
 			
 			fileList.add(file);
 		}

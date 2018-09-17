@@ -1,6 +1,9 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 
 <!DOCTYPE html>
+<c:if test='${sessionScope.user != null}'>
+	<jsp:forward page="dashboard.jsp"></jsp:forward>
+</c:if>
 <head>
 <title>Login</title>
 <META Http-Equiv="Cache-Control" Content="no-cache">
@@ -21,13 +24,11 @@
 }
 </style>
 <!-- //font-awesome icons -->
-<script src="js/jquery2.0.3.min.js"></script>
-<script src="js/modernizr.js"></script>
-<script src="js/jquery.cookie.js"></script>
 </head>
 
 <body class="dashboard-page">
 	<jsp:include page="header.jsp" />
+	
 	<section class="wrapper scrollable">
 		<div class="rightside">
 			
@@ -64,12 +65,15 @@
 			</div>
 			<!-- footer -->
 			<div class="footer">
-				<p>Â© 2018 . All Rights Reserved . Design by</p>
+				<p>© 2018. All Rights Reserved. Design by</p>
 			</div>
 			<!-- //footer -->
 		</div>
 	</section>
 	
+	<script src="js/jquery3.1.1.js"></script>
+	<script src="js/modernizr.js"></script>
+	<script src="js/jquery.cookie.js"></script>
 	<script src="js/bootstrap.js"></script>
 	<!-- input-forms -->
 		<script type="text/javascript" src="js/valida.2.1.6.min.js"></script>
@@ -82,14 +86,7 @@
 				// Exemple 1
 				$('.valida').valida();
 				
-				// setup the partial validation
-				$('#partial-1').on('click', function( ev ) {
-				ev.preventDefault();	
-					$('#res-1').click(); // clear form error msgs
-					$('form').valida('partial', '#field-1'); // validate only field-1
-					$('form').valida('partial', '#field-1-3'); // validate only field-1-3
-				});
-			})
+			});
 		</script>
 		<!-- //input-forms -->
 		<!--validator js-->

@@ -38,7 +38,7 @@ public class DaoUpdateImpl implements DaoUpdate {
 			throws ClassNotFoundException, SQLException, IOException {
 		// TODO Auto-generated method stub
 		pstatement = Database.getConnection().prepareStatement("update address set address_line1 = ?, address_line2 = ?,"
-				     + " city = ?, state = ?, country = ?, pincode = ?, update_by = ?, updae_time = Now() where address_id =" +Value2.getAddress_id());
+				     + " city = ?, state = ?, country = ?, pincode = ?, update_by = ?, update_time = Now() where address_id =" +Value2.getAddress_id());
 
 		pstatement.setString(1, Value2.getAddress_line1());
 		pstatement.setString(2, Value2.getAddress_line2());
@@ -54,7 +54,7 @@ public class DaoUpdateImpl implements DaoUpdate {
 	}
 	
 	@Override
-	public boolean updateFile(Files fileValue,Part file) throws ClassNotFoundException, SQLException, IOException {
+	public boolean updateFile(Files fileValue) throws ClassNotFoundException, SQLException, IOException {
 		// TODO Auto-generated method stub
 		
 		pstatement = Database.getConnection().prepareStatement("update files file_type = ?, file = ?, update_by = ?, update_time = Now() where file_id ="+fileValue.getFile_id());

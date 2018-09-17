@@ -1,12 +1,12 @@
 package com.basic.pojo;
 
-import java.sql.Blob;
+import java.io.InputStream;
 
 public class Files {
 	
 	private int file_id;
 	private String file_type;
-	private Blob file;
+	private InputStream file;
 	private String created_time;
 	private int update_by;
 	private String update_time;
@@ -24,10 +24,11 @@ public class Files {
 	public void setFile_type(String file_type) {
 		this.file_type = file_type;
 	}
-	public Blob getFile() {
+	
+	public InputStream getFile() {
 		return file;
 	}
-	public void setFile(Blob file) {
+	public void setFile(InputStream file) {
 		this.file = file;
 	}
 	public String getCreated_time() {

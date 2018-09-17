@@ -43,7 +43,6 @@ public class ControllerAddress extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		try {
-			
 			request.setAttribute("addresses", serviceget.getAddress(Integer.parseInt(request.getParameter("userid"))));
 			request.getRequestDispatcher("addresses.jsp").forward(request, response);
 			

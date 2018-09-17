@@ -46,19 +46,15 @@ public class Forgot extends HttpServlet {
 		// TODO Auto-generated method stub
 		try {
 			userpojo.setEmail(request.getParameter("email"));
-			userpojo.setMobile_no(Long.parseLong(request.getParameter("mobileNo")));
 			
 			String pass = userService.getPass(userpojo);
-			if(pass != null) {
-				request.setAttribute("password", pass);
-			}
+				
 			Properties prop=new Properties();
 		    InputStream input = Database.class.getClassLoader().getResourceAsStream("messages.properties");
 		    prop.load(input);
 		    input.close();
 		    
-			request.setAttribute("message", pass != null? prop.getProperty("getforgotpass") : prop.getProperty("unknownforgotpass"));
-			
+			request.setAttribute("message", pass != null? prop.getProperty("getforgotpass")+pass : prop.getProperty("unknownforgotpass"));
 			request.getRequestDispatcher("forgot.jsp").forward(request, response);
 			
 		} catch (ClassNotFoundException | SQLException e) {

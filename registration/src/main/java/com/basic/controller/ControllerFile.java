@@ -47,9 +47,10 @@ public class ControllerFile extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		try {
-			request.setAttribute("files", serviceget.getfile(Integer.parseInt(request.getParameter("userid"))));
-			request.getRequestDispatcher("files.jsp").forward(request, response);
-
+			if(request.getParameter("action").equals("get")) {
+				request.setAttribute("files", serviceget.getfile(Integer.parseInt(request.getParameter("userid"))));
+				request.getRequestDispatcher("files.jsp").forward(request, response);
+			}
 		} catch (NumberFormatException | ClassNotFoundException | SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -64,11 +65,11 @@ public class ControllerFile extends HttpServlet {
 		HttpSession session = request.getSession();
 		
 		filepojo.setFile_type("image");
-		Part file =request.getPart("file");
+		filepojo.setFile(request.getPart("file").getInputStream());
 		
 		try {	
 			if(request.getParameter("action").equals("save")) {
-				int file_id = servicesave.savefile(filepojo,file);
+				int file_id = servicesave.savefile(filepojo);
 				
 				filemappojo.setUser_id(Integer.parseInt(request.getParameter("userid")));
 				filemappojo.setFile_id(file_id);
@@ -76,7 +77,7 @@ public class ControllerFile extends HttpServlet {
 			}else {
 				filepojo.setFile_id(Integer.parseInt(request.getParameter("fileid")));
 				filepojo.setUpdate_by(((User)session.getAttribute("user")).getUser_id());
-				serviceupdate.updateFile(filepojo,file);
+				serviceupdate.updateFile(filepojo);
 			}	
 			
 			request.getRequestDispatcher("display.jsp").forward(request, response);

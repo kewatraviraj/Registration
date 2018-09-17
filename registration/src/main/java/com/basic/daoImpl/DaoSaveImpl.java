@@ -70,11 +70,11 @@ public class DaoSaveImpl implements DaoSave {
 		return (result == 1 ? true : false);
 	}
 	
-	public int savefile(Files fileValue, Part image) throws ClassNotFoundException, SQLException, IOException {
+	public int savefile(Files fileValue) throws ClassNotFoundException, SQLException, IOException {
 		query ="insert into files(file_type,file,created_time) values(?,?,Now())";
 		pstatement = Database.getConnection().prepareStatement(query, PreparedStatement.RETURN_GENERATED_KEYS);
 		pstatement.setString(1, fileValue.getFile_type());
-		pstatement.setBlob(2, image.getInputStream());
+		pstatement.setBlob(2, fileValue.getFile());
 		
 		pstatement.executeUpdate();
 		ResultSet result = pstatement.getGeneratedKeys();
@@ -102,6 +102,18 @@ public class DaoSaveImpl implements DaoSave {
 		// TODO Auto-generated method stub
 		Statement stat = Database.getConnection().createStatement();
 		int result = stat.executeUpdate("delete from userdata where user_id="+id);
+		
+		stat.close();
+		Database.getConnection().close();
+		return (result == 1 ? true : false);
+	}
+
+
+	@Override
+	public boolean deleteAddress(String id) throws ClassNotFoundException, SQLException, IOException {
+		// TODO Auto-generated method stub
+		Statement stat = Database.getConnection().createStatement();
+		int result = stat.executeUpdate("delete from address where address_id in("+ id +")");
 		
 		stat.close();
 		Database.getConnection().close();

@@ -13,6 +13,6 @@ public interface DaoUpdate {
 	
 	public boolean updateUser(User userValue) throws ClassNotFoundException, SQLException, IOException;
 	public boolean updateAddress(Address addressValue) throws ClassNotFoundException, SQLException, IOException;
-	public boolean updateFile(Files fileValue, Part file) throws ClassNotFoundException, SQLException, IOException;
+	public boolean updateFile(Files fileValue) throws ClassNotFoundException, SQLException, IOException;
 	
 }

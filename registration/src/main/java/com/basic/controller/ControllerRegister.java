@@ -12,8 +12,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import com.basic.dao.DaoGetAll;
 import com.basic.dao.DaoSave;
+import com.basic.dao.DaoUpdate;
 import com.basic.daoImpl.DaoGetImpl;
 import com.basic.daoImpl.DaoSaveImpl;
+import com.basic.daoImpl.DaoUpdateImpl;
 import com.basic.database.Database;
 import com.basic.pojo.Address;
 import com.basic.pojo.Filemap;
@@ -32,6 +34,7 @@ public class ControllerRegister extends HttpServlet {
 		Filemap filemappojo;
 		DaoSave servicesave;
 		DaoGetAll serviceget;
+		DaoUpdate serviceupdate;
     /**
      * @see HttpServlet#HttpServlet()
      */
@@ -43,6 +46,7 @@ public class ControllerRegister extends HttpServlet {
     	filemappojo = new Filemap();
         servicesave = new DaoSaveImpl();
         serviceget = new DaoGetImpl();
+        serviceupdate = new DaoUpdateImpl();
     }
 
 	/**
@@ -78,27 +82,25 @@ public class ControllerRegister extends HttpServlet {
 		int file_id;
 		boolean result = false;
 		
-		userpojo.setRole_id(2);
-		userpojo.setFirstname(request.getParameter("firstName"));
-		userpojo.setLastname(request.getParameter("lastName"));
-		userpojo.setEmail(request.getParameter("email"));
-		userpojo.setMobile_no(Long.parseLong(request.getParameter("mobileNo")));
-		userpojo.setPassword(request.getParameter("passWord"));
-		userpojo.setGender(request.getParameter("gender"));
-		userpojo.setDate_of_birth(request.getParameter("dateofBirth"));
-
-		try {	
+		Properties prop=new Properties();
+	    InputStream input = Database.class.getClassLoader().getResourceAsStream("messages.properties");
+	    prop.load(input);
+	    input.close();
+		
+	    try {
+			userpojo.setRole_id(2);
+			userpojo.setFirstname(request.getParameter("firstName"));
+			userpojo.setLastname(request.getParameter("lastName"));
+			userpojo.setEmail(request.getParameter("email"));
+			userpojo.setMobile_no(Long.parseLong(request.getParameter("mobileNo")));
+			userpojo.setGender(request.getParameter("gender"));
+			userpojo.setDate_of_birth(request.getParameter("dateofBirth"));
+			
+		if("insert".equals(request.getParameter("operation"))) {
+			userpojo.setPassword(request.getParameter("passWord"));
 			user_id = servicesave.saveuser(userpojo);
+			
 			if(user_id != 0) {
-				/*
-				addresspojo.setAddress_line1(request.getParameter("address_line1"));
-				addresspojo.setAddress_line2(request.getParameter("address_line2"));
-				addresspojo.setCity(request.getParameter("city"));
-				addresspojo.setState(request.getParameter("state"));
-				addresspojo.setCountry(request.getParameter("country"));
-				addresspojo.setPincode(Integer.parseInt(request.getParameter("pincode")));	
-				servicesave.saveaddress(addresspojo);
-				*/
 				String address1[] = request.getParameterValues("address_line1");
 				String address2[] = request.getParameterValues("address_line2");
 				String city[] = request.getParameterValues("city");
@@ -118,21 +120,57 @@ public class ControllerRegister extends HttpServlet {
 				}	
 				
 				filepojo.setFile_type("image");
-				file_id = servicesave.savefile(filepojo,request.getPart("file"));
+				filepojo.setFile(request.getPart("file").getInputStream());
+				file_id = servicesave.savefile(filepojo);
 				
 				filemappojo.setUser_id(user_id);
 				filemappojo.setFile_id(file_id);
-				result = servicesave.savefilemap(filemappojo);
-					
-			}
-			Properties prop=new Properties();
-		    InputStream input = Database.class.getClassLoader().getResourceAsStream("messages.properties");
-		    prop.load(input);
-		    input.close();
-		    
+				result = servicesave.savefilemap(filemappojo);		
+			} 
 			request.setAttribute("message", result? prop.getProperty("registerSuccessmessage") : prop.getProperty("registerunSuccessmessage"));
-			
 			request.getRequestDispatcher("index.jsp").forward(request, response);
+		}else {
+			userpojo.setUser_id(Integer.parseInt(request.getParameter("user_id")));
+			
+			if(serviceupdate.updateUser(userpojo)) {
+				
+				if("yes".equals(request.getParameter("deleteFlag"))) {
+					servicesave.deleteAddress(request.getParameter("deleteaddressIds"));
+				}
+				
+				String operationAddress[] = request.getParameterValues("operationAddress");
+				
+				String addressId[] = request.getParameterValues("address_id");
+				String address1[] = request.getParameterValues("address_line1");
+				String address2[] = request.getParameterValues("address_line2");
+				String city[] = request.getParameterValues("city");
+				String state[] = request.getParameterValues("state");
+				String country[] =request.getParameterValues("country");
+				String pincode[] = request.getParameterValues("pincode");
+				
+				for(int index=0; index<address1.length; index++ ) {
+					
+					addresspojo.setAddress_line1(address1[index]);
+					addresspojo.setAddress_line2(address2[index]);
+					addresspojo.setCity(city[index]);
+					addresspojo.setState(state[index]);
+					addresspojo.setCountry(country[index]);
+					addresspojo.setPincode(Integer.parseInt(pincode[index]));	
+					
+					if("updateAddress".equals(operationAddress[index])) {
+						addresspojo.setAddress_id(Integer.parseInt(addressId[index]));
+						addresspojo.setUpdate_by(((User) request.getSession().getAttribute("user")).getUser_id());
+						
+					result = serviceupdate.updateAddress(addresspojo);
+					}else {
+						addresspojo.setUser_id(userpojo.getUser_id());
+					result = servicesave.saveaddress(addresspojo);	
+					}	
+				}	
+			}	
+			request.setAttribute("message", result? prop.getProperty("updateSuccessmessage") : prop.getProperty("updateunSuccessmessage"));
+			request.getRequestDispatcher("dashboard.jsp").forward(request, response);
+		}
 		} catch (ClassNotFoundException | SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
