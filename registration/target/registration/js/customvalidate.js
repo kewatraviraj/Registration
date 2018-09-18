@@ -1,4 +1,4 @@
-$(document).ready(function(){
+//$(document).ready(function(){
 	// $('#registration-form').validate({
 		// rules: {
 			// mobileNo :{
@@ -16,4 +16,4 @@ $(document).ready(function(){
 			// .closest('.control-group').removeClass('error').addClass('success');
 		// }
 	// });
-}); 
+//}); 

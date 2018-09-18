@@ -35,11 +35,11 @@
 			  <div class="table-title">
                 <div class="row">
                     <div class="col-sm-8">
-						<h4>All	 <b>Users</b></h4>
+						<h5>All	 <b>Users</b></h5>
 					</div>
 
 					<div class="col-sm-4">
-						<a href="register.jsp" class="btn btn-success" data-toggle="modal"><i class="material-icons">&#xE147;</i> <span>Add User</span></a>						
+						<a href="register.jsp" class="btn btn-success"><i class="material-icons">&#xE147;</i> <span>Add User</span></a>						
 					</div>
                 </div>
             </div>
@@ -67,8 +67,8 @@
 								<a href="operation?action=get&&userid=<c:out value='${userdetail.user_id }' />" class="edit visible-xs" data-toggle="modal"><i class="glyphicon glyphicon-edit" title="Edit"></i></a>
 						
 								<c:if test='${sessionScope.user.user_id == 1}'>							
-									<a href="operation?action=delete&&userid=<c:out value='${userdetail.user_id }'/>" type="Submit" class="btn btn-lg label-danger hidden-xs">Delete</a>
-									<a href="operation?action=delete&&userid=<c:out value='${userdetail.user_id }'/>" class="delete visible-xs" data-toggle="modal"><i class="material-icons" title="Delete">&#xE872;</i></a>
+									<button data-for="<c:out value='${userdetail.user_id }'/>" type="Submit" class="btn btn-lg label-danger delete hidden-xs">Delete</button>
+									<button data-for="<c:out value='${userdetail.user_id }'/>" class="delete visible-xs" data-toggle="modal"><i class="material-icons" title="Delete">&#xE872;</i></button>
 								</c:if>
 							</td>
 	                    </tr>
@@ -112,6 +112,22 @@
 	<!--validator js-->
 	<script src="js/customvalidate.js"></script>
 	<!--//validator js-->
+	<script>
+	$(".delete").click(function(){
+		$.ajax({
+		       type: 'get',
+		 	   url : 'operation?action=delete',
+		 	   data:{
+		 		  userid : $(this).attr("data-for"),  
+		 	   },	   
+		 	   success: function(responseText){
+		 		  if(responseText!="fail"){
+		 			 $('.delete[data-for="'+ responseText + '"]').parents("tr").remove();
+		 		  }
+		 	   }  
+		    });
+	});
+	</script>
 
 	<script src="js/proton.js"></script>
 </body>

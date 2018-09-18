@@ -45,7 +45,7 @@ public class AuthenticateUserLogin implements Filter {
         if (session.getAttribute("user") != null) {   //checking whether the session exists
         	 chain.doFilter(request, response);
         } else {
-            // pass the request along the filter chain
+           
         	res.sendRedirect(req.getContextPath() + "/index.jsp");
         }
 	}

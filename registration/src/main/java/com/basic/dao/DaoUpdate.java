@@ -3,8 +3,6 @@ package com.basic.dao;
 import java.io.IOException;
 import java.sql.SQLException;
 
-import javax.servlet.http.Part;
-
 import com.basic.pojo.Address;
 import com.basic.pojo.Files;
 import com.basic.pojo.User;

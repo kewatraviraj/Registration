@@ -12,10 +12,10 @@ body {
         box-shadow: 0 1px 1px rgba(0,0,0,.05);
     }
 	.table-title {        
-		padding-bottom: 15px;
+		padding-bottom: 10px;
 		background: #435d7d;
 		color: #fff;
-		padding: 16px 30px;
+		padding: 10px 30px;
 		border-radius: 3px 3px 0 0;
     }
     .table-title h2 {

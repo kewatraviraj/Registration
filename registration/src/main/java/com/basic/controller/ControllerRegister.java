@@ -10,9 +10,12 @@ import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import com.basic.dao.DaoDelete;
 import com.basic.dao.DaoGetAll;
 import com.basic.dao.DaoSave;
 import com.basic.dao.DaoUpdate;
+import com.basic.daoImpl.DaoDeleteImpl;
 import com.basic.daoImpl.DaoGetImpl;
 import com.basic.daoImpl.DaoSaveImpl;
 import com.basic.daoImpl.DaoUpdateImpl;
@@ -35,6 +38,10 @@ public class ControllerRegister extends HttpServlet {
 		DaoSave servicesave;
 		DaoGetAll serviceget;
 		DaoUpdate serviceupdate;
+		DaoDelete serviceremove;
+		int user_id, file_id, updatebyuser_id=0;
+		boolean result = false;
+		String[] address1, address2, city, state, country, pincode, operationAddress, addressIds;
     /**
      * @see HttpServlet#HttpServlet()
      */
@@ -47,6 +54,7 @@ public class ControllerRegister extends HttpServlet {
         servicesave = new DaoSaveImpl();
         serviceget = new DaoGetImpl();
         serviceupdate = new DaoUpdateImpl();
+        serviceremove = new DaoDeleteImpl();
     }
 
 	/**
@@ -55,15 +63,15 @@ public class ControllerRegister extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
 			try {
-				if(request.getParameter("action").equals("users")) {
+				if("users".equals(request.getParameter("action"))) {
 					request.setAttribute("users", serviceget.getAllUser());
 					request.getRequestDispatcher("/details.jsp").forward(request, response);
 					
-				}else if(request.getParameter("action").equals("addresses")) {
+				}else if("addresses".equals(request.getParameter("action"))) {
 					request.setAttribute("addresses", serviceget.getAllAddress());
 					request.getRequestDispatcher("/addresses.jsp").forward(request, response);
 					
-				}else if(request.getParameter("action").equals("files")) {
+				}else if("files".equals(request.getParameter("action"))) {
 					request.setAttribute("files", serviceget.getAllFiles());
 					request.getRequestDispatcher("/files.jsp").forward(request, response);	
 				}
@@ -78,9 +86,6 @@ public class ControllerRegister extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		int user_id;
-		int file_id;
-		boolean result = false;
 		
 		Properties prop=new Properties();
 	    InputStream input = Database.class.getClassLoader().getResourceAsStream("messages.properties");
@@ -96,85 +101,79 @@ public class ControllerRegister extends HttpServlet {
 			userpojo.setGender(request.getParameter("gender"));
 			userpojo.setDate_of_birth(request.getParameter("dateofBirth"));
 			
-		if("insert".equals(request.getParameter("operation"))) {
-			userpojo.setPassword(request.getParameter("passWord"));
-			user_id = servicesave.saveuser(userpojo);
-			
-			if(user_id != 0) {
-				String address1[] = request.getParameterValues("address_line1");
-				String address2[] = request.getParameterValues("address_line2");
-				String city[] = request.getParameterValues("city");
-				String state[] = request.getParameterValues("state");
-				String country[] =request.getParameterValues("country");
-				String pincode[] = request.getParameterValues("pincode");
+			 address1 = request.getParameterValues("address_line1");
+			 address2 = request.getParameterValues("address_line2");
+			 city = request.getParameterValues("city");
+			 state = request.getParameterValues("state");
+			 country =request.getParameterValues("country");
+			 pincode = request.getParameterValues("pincode");
+			 
+			 operationAddress = request.getParameterValues("operationAddress");     //operation value add or update for address
+			 
+			if("insert".equals(request.getParameter("operation"))) {			//check that request is for insert or update user detail
 				
-				for(int index=0; index<address1.length; index++ ) {
-					addresspojo.setUser_id(user_id);
-					addresspojo.setAddress_line1(address1[index]);
-					addresspojo.setAddress_line2(address2[index]);
-					addresspojo.setCity(city[index]);
-					addresspojo.setState(state[index]);
-					addresspojo.setCountry(country[index]);
-					addresspojo.setPincode(Integer.parseInt(pincode[index]));	
-					servicesave.saveaddress(addresspojo);	
-				}	
-				
-				filepojo.setFile_type("image");
-				filepojo.setFile(request.getPart("file").getInputStream());
-				file_id = servicesave.savefile(filepojo);
-				
-				filemappojo.setUser_id(user_id);
-				filemappojo.setFile_id(file_id);
-				result = servicesave.savefilemap(filemappojo);		
-			} 
-			request.setAttribute("message", result? prop.getProperty("registerSuccessmessage") : prop.getProperty("registerunSuccessmessage"));
-			request.getRequestDispatcher("index.jsp").forward(request, response);
-		}else {
-			userpojo.setUser_id(Integer.parseInt(request.getParameter("user_id")));
-			
-			if(serviceupdate.updateUser(userpojo)) {
-				
-				if("yes".equals(request.getParameter("deleteFlag"))) {
-					servicesave.deleteAddress(request.getParameter("deleteaddressIds"));
-				}
-				
-				String operationAddress[] = request.getParameterValues("operationAddress");
-				
-				String addressId[] = request.getParameterValues("address_id");
-				String address1[] = request.getParameterValues("address_line1");
-				String address2[] = request.getParameterValues("address_line2");
-				String city[] = request.getParameterValues("city");
-				String state[] = request.getParameterValues("state");
-				String country[] =request.getParameterValues("country");
-				String pincode[] = request.getParameterValues("pincode");
-				
-				for(int index=0; index<address1.length; index++ ) {
+				userpojo.setPassword(request.getParameter("passWord"));
+				user_id = servicesave.saveuser(userpojo);
+				if(user_id != 0) {
 					
-					addresspojo.setAddress_line1(address1[index]);
-					addresspojo.setAddress_line2(address2[index]);
-					addresspojo.setCity(city[index]);
-					addresspojo.setState(state[index]);
-					addresspojo.setCountry(country[index]);
-					addresspojo.setPincode(Integer.parseInt(pincode[index]));	
+					result = addUpdateAddress(user_id,updatebyuser_id);				//method for add or update addresses
 					
-					if("updateAddress".equals(operationAddress[index])) {
-						addresspojo.setAddress_id(Integer.parseInt(addressId[index]));
-						addresspojo.setUpdate_by(((User) request.getSession().getAttribute("user")).getUser_id());
-						
-					result = serviceupdate.updateAddress(addresspojo);
-					}else {
-						addresspojo.setUser_id(userpojo.getUser_id());
-					result = servicesave.saveaddress(addresspojo);	
-					}	
+					filepojo.setFile_type("image");
+					filepojo.setFile(request.getPart("file").getInputStream());
+					file_id = servicesave.savefile(filepojo);
+					
+					filemappojo.setUser_id(user_id);
+					filemappojo.setFile_id(file_id);
+					result = servicesave.savefilemap(filemappojo);		
+				} 
+				request.setAttribute("message", result  ? prop.getProperty("registerSuccessmessage") 
+														: prop.getProperty("registerunSuccessmessage"));
+				request.getRequestDispatcher("index.jsp").forward(request, response);
+				
+			}else {
+				user_id = Integer.parseInt(request.getParameter("user_id"));
+				updatebyuser_id = ((User) request.getSession().getAttribute("user")).getUser_id();
+				
+				userpojo.setUser_id(user_id);
+				userpojo.setUpdate_by(updatebyuser_id);
+				addressIds = request.getParameterValues("address_id");						//address_id for update address details 
+				
+				if(serviceupdate.updateUser(userpojo)) {
+					if("yes".equals(request.getParameter("deleteFlag"))) {
+						serviceremove.deleteAddress(request.getParameter("deleteaddressIds"));		//remove addressses
+					}
+				
+					result = addUpdateAddress(user_id,updatebyuser_id);
 				}	
-			}	
-			request.setAttribute("message", result? prop.getProperty("updateSuccessmessage") : prop.getProperty("updateunSuccessmessage"));
-			request.getRequestDispatcher("dashboard.jsp").forward(request, response);
-		}
+				request.setAttribute("message", result  ? prop.getProperty("updateSuccessmessage") 
+														: prop.getProperty("updateunSuccessmessage"));
+				request.getRequestDispatcher("dashboard.jsp").forward(request, response);
+			}
 		} catch (ClassNotFoundException | SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
+	
+	private boolean addUpdateAddress(int user_id,int updatebyuser_id) throws ClassNotFoundException, SQLException, IOException {
+		for(int index=0; index<address1.length; index++ ) {
+			addresspojo.setAddress_line1(address1[index]);
+			addresspojo.setAddress_line2(address2[index]);
+			addresspojo.setCity(city[index]);
+			addresspojo.setState(state[index]);
+			addresspojo.setCountry(country[index]);
+			addresspojo.setPincode(Integer.parseInt(pincode[index]));	
+			
+			if("updateAddress".equals(operationAddress[index])) {
+				addresspojo.setAddress_id(Integer.parseInt(addressIds[index]));
+				addresspojo.setUpdate_by(updatebyuser_id);
+				result = serviceupdate.updateAddress(addresspojo);
+			}else {
+				addresspojo.setUser_id(user_id);
+				result = servicesave.saveaddress(addresspojo);	
+			}	
+		}
+		return (result ? true : false);
 	}
 
 }

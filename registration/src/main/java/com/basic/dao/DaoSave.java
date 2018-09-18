@@ -5,8 +5,6 @@ package com.basic.dao;
 
 import java.io.IOException;
 import java.sql.SQLException;
-import javax.servlet.http.Part;
-
 import com.basic.pojo.Address;
 import com.basic.pojo.Filemap;
 import com.basic.pojo.Files;
@@ -23,7 +21,4 @@ public interface DaoSave {
 	public int savefile(Files Value3) throws ClassNotFoundException, SQLException, IOException;
 	public boolean savefilemap(Filemap Value4)throws ClassNotFoundException, SQLException, IOException;
 	
-	public boolean del(int id) throws ClassNotFoundException, SQLException, IOException;
-	public boolean deleteAddress(String id) throws ClassNotFoundException, SQLException, IOException;
-
 }

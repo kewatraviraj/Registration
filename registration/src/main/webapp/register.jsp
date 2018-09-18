@@ -244,7 +244,6 @@
 				$(".btnRemove").click(function(){
 					if($(this).attr("data-target") !=null && $(this).attr("data-target") !=""){
 						deleteaddressIds.push($(this).attr("data-target"));
-						alert(deleteaddressIds);
 						$("#deleteFlag").val("yes");
 					}
 					

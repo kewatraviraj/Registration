@@ -7,9 +7,6 @@ import java.io.IOException;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
-import javax.servlet.http.Part;
-
 import com.basic.database.Database;
 import com.basic.dao.DaoSave;
 import com.basic.pojo.Address;
@@ -93,29 +90,6 @@ public class DaoSaveImpl implements DaoSave {
 		pstatement.setInt(2, filemap.getFile_id());
 		int result = pstatement.executeUpdate();
 		pstatement.close();
-		Database.getConnection().close();
-		return (result == 1 ? true : false);
-	}
-	
-	@Override
-	public boolean del(int id) throws ClassNotFoundException, SQLException, IOException {
-		// TODO Auto-generated method stub
-		Statement stat = Database.getConnection().createStatement();
-		int result = stat.executeUpdate("delete from userdata where user_id="+id);
-		
-		stat.close();
-		Database.getConnection().close();
-		return (result == 1 ? true : false);
-	}
-
-
-	@Override
-	public boolean deleteAddress(String id) throws ClassNotFoundException, SQLException, IOException {
-		// TODO Auto-generated method stub
-		Statement stat = Database.getConnection().createStatement();
-		int result = stat.executeUpdate("delete from address where address_id in("+ id +")");
-		
-		stat.close();
 		Database.getConnection().close();
 		return (result == 1 ? true : false);
 	}

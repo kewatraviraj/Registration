@@ -4,8 +4,6 @@ import java.io.IOException;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
-import javax.servlet.http.Part;
-
 import com.basic.dao.DaoUpdate;
 import com.basic.database.Database;
 import com.basic.pojo.Address;

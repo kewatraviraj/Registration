@@ -9,9 +9,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import com.basic.dao.DaoDelete;
 import com.basic.dao.DaoGetAll;
 import com.basic.dao.DaoSave;
 import com.basic.dao.DaoUpdate;
+import com.basic.daoImpl.DaoDeleteImpl;
 import com.basic.daoImpl.DaoGetImpl;
 import com.basic.daoImpl.DaoSaveImpl;
 import com.basic.daoImpl.DaoUpdateImpl;
@@ -26,6 +28,7 @@ public class ControllerUser extends HttpServlet {
 	DaoGetAll serviceget;
 	DaoUpdate serviceupdate;
 	DaoSave servicesave;
+	DaoDelete serviceremove;
 	/**
      * @see HttpServlet#HttpServlet()
      */
@@ -34,6 +37,7 @@ public class ControllerUser extends HttpServlet {
         serviceget = new DaoGetImpl();
         serviceupdate = new DaoUpdateImpl();
         servicesave = new DaoSaveImpl();
+        serviceremove = new DaoDeleteImpl();
     }
 
 	/**
@@ -41,6 +45,7 @@ public class ControllerUser extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
+				response.setContentType("text/plain");
 		try {
 			if(request.getParameter("action").equals("get")) {
 				User user = serviceget.getUser(Integer.parseInt(request.getParameter("userid")));
@@ -51,9 +56,11 @@ public class ControllerUser extends HttpServlet {
 				request.getRequestDispatcher("register.jsp").forward(request, response);
 				
 			}else if(request.getParameter("action").equals("delete")) {
-				request.setAttribute("user", servicesave.del(Integer.parseInt(request.getParameter("userid"))));	
-				request.setAttribute("users", serviceget.getAllUser());
-				request.getRequestDispatcher("details.jsp").forward(request, response);
+				if(serviceremove.deleteUser(Integer.parseInt(request.getParameter("userid")))) {
+					response.getWriter().write(request.getParameter("userid"));
+				}else {
+					response.getWriter().write("fail");
+				}		
 			}	
 			
 		} catch (NumberFormatException | ClassNotFoundException | SQLException e) {
