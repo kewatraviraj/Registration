@@ -24,9 +24,10 @@
 		<div class="error-page">
 			<img src="images/error.png" alt="">
 		</div>
-		<div>
+		<div class="text-center">
+			<h3>Page Can Not Found</h3>
 			<h3><c:out value="${requestScope.message }"></c:out></h3>
-		</div>
+		</div><br>
 		<div class="go-back">
 			<a href="index.jsp">Back To Home</a>
 		</div>

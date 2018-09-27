@@ -42,7 +42,7 @@
 						<th>Country</th>
 						<th>Pincode</th>
 						<th>CreatedTime</th>
-						<th>Action</th>
+						
 					</tr>
 				</thead>
 				<tbody>
@@ -56,10 +56,7 @@
 						<td><c:out value="${addressdetail.country }"></c:out></td>
 						<td><c:out value="${addressdetail.pincode }"></c:out></td>
 						<td><c:out value="${addressdetail.created_time }"></c:out></td>
-						<td style="text-align:center;">
-							<a href="" class="btn btn-warning">Edit</a>
-							<a href="" class="btn btn-warning">Delete</a>
-						</td>
+						
 					</tr>
 					</c:forEach>
 				</tbody>

@@ -11,15 +11,12 @@ com\basic\controller\ControllerLogin.class
 com\basic\filters\AuthenticateUserLogin.class
 com\basic\filters\NoCacheFilter.class
 com\basic\pojo\User.class
-com\basic\controller\ControllerAddress.class
 com\basic\controller\Forgot.class
 com\basic\pojo\Address.class
 com\basic\dao\DaoDelete.class
-com\basic\controller\Test.class
 com\basic\daoImpl\DaoUpdateImpl.class
 com\basic\daoImpl\DaoDeleteImpl.class
 com\basic\daoImpl\UserServiceImpl.class
 com\basic\daoImpl\DaoGetImpl.class
 com\basic\pojo\Files.class
 com\basic\controller\Logout.class
-com\basic\controller\ControllerFile.class

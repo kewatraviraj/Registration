@@ -62,7 +62,7 @@
 		</div>
 	</section>
 	
-		<script src="js/jquery3.1.1.min.js"></script>
+		<script src="js/jquery3.1.1.js"></script>
 		<script src="js/modernizr.js"></script>
 		<script src="js/jquery.cookie.js"></script>
 		<script src="js/bootstrap.js"></script>

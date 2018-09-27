@@ -20,7 +20,7 @@
 </SCRIPT>
 </head>
 
-<body class="dashboard-page" onload="noBack();" onpageshow="if (event.persisted) noBack();" onunload="">
+<body class="dashboard-page" onload="noBack();" onpageshow="if (event.persisted) noBack();"  onunload="">
 	<jsp:include page="header.jsp" />
 	
 	<section class="wrapper scrollable">
@@ -29,17 +29,22 @@
 				<div class="agile-grids">	
 					<!-- validation -->
 					<div class="grids">
-						<div class="progressbar-heading grids-heading">
-							<h2></h2>
+						<div class="progressbar-heading grids-heading text-center">
+							<h3 id="notchanges"></h3>
 						</div>
+						<c:if test='${sessionScope.user != null }'>
+						<div><a href="dashboard.jsp" class="btn btn-large btn-warning">Cancel</a></div>
+						</c:if>
+						<br>
 						<div class="w3agile-validation w3ls-validation">
 							<div class="panel panel-widget agile-validation">
-								<div class="validation-grids widget-shadow" data-example-id="basic-forms"> 
+								<div class="validation-grids widget-shadow" data-example-id="basic-forms">
+									<div class="text-center"><h5 id="nochanges"></h5></div> 
 									<div class="input-info">
 										<h3>Fill the Details :</h3>
 									</div>
 									<div class="form-body form-body-info">
-										<form data-toggle="validator" id="registration-form" novalidate="true" action="save" method="post" enctype="multipart/form-data">
+										<form data-toggle="validator" id="registration-form" novalidate="true" action="save" method="post" enctype="multipart/form-data" onsubmit="return validchange()">
 											<c:if test='${requestScope.files == null }'>
 											 	<div class="form-group register-image text-center">
 													<img src="images/avatar_2x.png" class="avatar img-circle img-thumbnail" alt="avatar" accept="image/*"><br>
@@ -77,7 +82,7 @@
 												<span class="help-block with-errors"></span>
 											</div>
 											
-											<c:if test='${sessionScope.user == null || sessionScope.user.role_id == 1 && requestScope.user == null }'>
+											<c:if test='${sessionScope.user == null || sessionScope.role_id == 1 && requestScope.user == null }'>
 											Password* :
 											<div class="form-group">
 											  <input type="password" value="<c:out value='${requestScope.user.password }' />" data-toggle="validator" data-minlength="6" class="form-control" name="passWord" id="inputPassword" placeholder="Password" required="">
@@ -280,6 +285,20 @@
 					btnAdd:'.btnAdd',
 					btnRemove:'.btnRemove'
 			});
+			
+			$("#registration-form :input[type='text'], :input[type='email'], :input[type='number'], :input[type='radio'], :input[type='date']").change(function() {
+				$("#registration-form").data("changed",true);
+			});
+			
+			function validchange(){
+				 if($("#registration-form").data("changed")){
+					return true;
+				}else{
+					$("#nochanges").text("You haven't changed any Detail");
+					window.location.hash = '#notchanges';
+					return false;
+				 } 
+			}
 		</script>
 
 		<script src="js/proton.js"></script>

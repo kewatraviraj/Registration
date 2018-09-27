@@ -1,6 +1,9 @@
 package com.basic.filters;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.util.Properties;
+
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
@@ -9,8 +12,9 @@ import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+
+import com.basic.database.Database;
 
 /**
  * Servlet Filter implementation class Authenticate
@@ -37,16 +41,21 @@ public class AuthenticateUserLogin implements Filter {
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
 		// TODO Auto-generated method stub
 		// place your code here
+		
+		Properties prop=new Properties();
+	    InputStream input = Database.class.getClassLoader().getResourceAsStream("messages.properties");
+	    prop.load(input);
+	    input.close();
+	    
 		HttpServletRequest req = (HttpServletRequest) request;
-        HttpServletResponse res = (HttpServletResponse) response;
 
         HttpSession session = req.getSession(false);
 
         if (session.getAttribute("user") != null) {   //checking whether the session exists
         	 chain.doFilter(request, response);
         } else {
-           
-        	res.sendRedirect(req.getContextPath() + "/index.jsp");
+        	req.setAttribute("message", prop.getProperty("sessionexpire"));
+        	req.getRequestDispatcher("index.jsp").forward(request, response);
         }
 	}
 

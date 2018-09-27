@@ -11,6 +11,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.log4j.Logger;
+
 import com.basic.dao.DaoDelete;
 import com.basic.dao.DaoGetAll;
 import com.basic.dao.DaoSave;
@@ -30,54 +32,42 @@ import com.basic.pojo.User;
  */
 @MultipartConfig(maxFileSize = 1024 * 1024 * 5)
 public class ControllerRegister extends HttpServlet {
+	static Logger log = Logger.getLogger(ControllerRegister.class.getName());
+
 	private static final long serialVersionUID = 1L;
-		User userpojo;
-		Address addresspojo;
-		Files filepojo;
-		Filemap filemappojo;
-		DaoSave servicesave;
-		DaoGetAll serviceget;
-		DaoUpdate serviceupdate;
-		DaoDelete serviceremove;
-		int user_id, file_id, updatebyuser_id=0;
-		boolean result = false;
-		String[] address1, address2, city, state, country, pincode, operationAddress, addressIds;
-    /**
+	static final User userpojo = new User();
+	static final Address addresspojo = new Address();
+	static final Files filepojo = new Files();
+	static final Filemap filemappojo = new Filemap();
+	
+	static final DaoSave servicesave = new DaoSaveImpl();
+	static final DaoGetAll serviceget = new DaoGetImpl();
+	static final DaoUpdate serviceupdate = new DaoUpdateImpl(); 
+	static final DaoDelete serviceremove = new DaoDeleteImpl();
+	
+	/**
      * @see HttpServlet#HttpServlet()
      */
     public ControllerRegister() {
         // TODO Auto-generated constructor stub
-    	userpojo = new User();
-    	addresspojo = new Address();
-    	filepojo = new Files();
-    	filemappojo = new Filemap();
-        servicesave = new DaoSaveImpl();
-        serviceget = new DaoGetImpl();
-        serviceupdate = new DaoUpdateImpl();
-        serviceremove = new DaoDeleteImpl();
     }
 
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-			try {
-				if("users".equals(request.getParameter("action"))) {
-					request.setAttribute("users", serviceget.getAllUser());
-					request.getRequestDispatcher("/details.jsp").forward(request, response);
-					
-				}else if("addresses".equals(request.getParameter("action"))) {
-					request.setAttribute("addresses", serviceget.getAllAddress());
-					request.getRequestDispatcher("/addresses.jsp").forward(request, response);
-					
-				}else if("files".equals(request.getParameter("action"))) {
-					request.setAttribute("files", serviceget.getAllFiles());
-					request.getRequestDispatcher("/files.jsp").forward(request, response);	
-				}
-			} catch (ClassNotFoundException | SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+		
+		if("users".equals(request.getParameter("action"))) {
+				request.setAttribute("users", serviceget.getAllUser());					//method for get all user details
+				request.getRequestDispatcher("/details.jsp").forward(request, response);
+				
+			}else if("addresses".equals(request.getParameter("action"))) {
+				request.setAttribute("addresses", serviceget.getAllAddress());			//method for get all addresses
+				request.getRequestDispatcher("/addresses.jsp").forward(request, response);
+				
+			}else if("files".equals(request.getParameter("action"))) {
+				request.setAttribute("files", serviceget.getAllFiles());				//method for get all files
+				request.getRequestDispatcher("/files.jsp").forward(request, response);	
 			}
 	}
 	
@@ -86,7 +76,10 @@ public class ControllerRegister extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		
+		 log.info("-----ControllerRegister post Logged-----");	    
+		int user_id, file_id, updatebyuser_id=0;
+		boolean result = false;	
+		 
 		Properties prop=new Properties();
 	    InputStream input = Database.class.getClassLoader().getResourceAsStream("messages.properties");
 	    prop.load(input);
@@ -100,15 +93,6 @@ public class ControllerRegister extends HttpServlet {
 			userpojo.setMobile_no(Long.parseLong(request.getParameter("mobileNo")));
 			userpojo.setGender(request.getParameter("gender"));
 			userpojo.setDate_of_birth(request.getParameter("dateofBirth"));
-			
-			 address1 = request.getParameterValues("address_line1");
-			 address2 = request.getParameterValues("address_line2");
-			 city = request.getParameterValues("city");
-			 state = request.getParameterValues("state");
-			 country =request.getParameterValues("country");
-			 pincode = request.getParameterValues("pincode");
-			 
-			 operationAddress = request.getParameterValues("operationAddress");     //operation value add or update for address
 			 
 			if("insert".equals(request.getParameter("operation"))) {			//check that request is for insert or update user detail
 				
@@ -116,46 +100,69 @@ public class ControllerRegister extends HttpServlet {
 				user_id = servicesave.saveuser(userpojo);
 				if(user_id != 0) {
 					
-					result = addUpdateAddress(user_id,updatebyuser_id);				//method for add or update addresses
+					result = addUpdateAddress(request, user_id,updatebyuser_id);				//method for add and update addresses
 					
 					filepojo.setFile_type("image");
 					filepojo.setFile(request.getPart("file").getInputStream());
-					file_id = servicesave.savefile(filepojo);
+					file_id = servicesave.savefile(filepojo);						//call a method for save file to DataBase
 					
 					filemappojo.setUser_id(user_id);
 					filemappojo.setFile_id(file_id);
-					result = servicesave.savefilemap(filemappojo);		
-				} 
+					result = servicesave.savefilemap(filemappojo);
+				} 																	/*set the message for responses*/
 				request.setAttribute("message", result  ? prop.getProperty("registerSuccessmessage") 
 														: prop.getProperty("registerunSuccessmessage"));
 				request.getRequestDispatcher("index.jsp").forward(request, response);
 				
 			}else {
 				user_id = Integer.parseInt(request.getParameter("user_id"));
-				updatebyuser_id = ((User) request.getSession().getAttribute("user")).getUser_id();
+				updatebyuser_id = (int) request.getSession().getAttribute("user_id");
 				
 				userpojo.setUser_id(user_id);
 				userpojo.setUpdate_by(updatebyuser_id);
-				addressIds = request.getParameterValues("address_id");						//address_id for update address details 
 				
 				if(serviceupdate.updateUser(userpojo)) {
 					if("yes".equals(request.getParameter("deleteFlag"))) {
 						serviceremove.deleteAddress(request.getParameter("deleteaddressIds"));		//remove addressses
 					}
 				
-					result = addUpdateAddress(user_id,updatebyuser_id);
-				}	
-				request.setAttribute("message", result  ? prop.getProperty("updateSuccessmessage") 
+					result = addUpdateAddress(request, user_id,updatebyuser_id);					//method for add and update address
+				}													/*set the message for responses*/				
+				request.setAttribute("message", result  ? prop.getProperty("updateSuccessmessage") 		
 														: prop.getProperty("updateunSuccessmessage"));
 				request.getRequestDispatcher("dashboard.jsp").forward(request, response);
 			}
-		} catch (ClassNotFoundException | SQLException e) {
+		} catch (NumberFormatException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			log.error("Error Message Logged !!!" + e );
+			
+			request.getRequestDispatcher("register.jsp").forward(request, response);
 		}
 	}
 	
-	private boolean addUpdateAddress(int user_id,int updatebyuser_id) throws ClassNotFoundException, SQLException, IOException {
+	
+	/**
+	 * @param user_id
+	 * @param updatebyuser_id
+	 * @return
+	 * @throws ClassNotFoundException
+	 * @throws SQLException
+	 * @throws IOException
+	 */
+	private boolean addUpdateAddress(HttpServletRequest request,int user_id,int updatebyuser_id)throws ServletException, IOException{
+		String[] address1 = null, address2 = null, city = null, state = null, country = null, pincode = null, operationAddress = null, addressIds = null;
+		boolean result = false;
+		
+        address1 = request.getParameterValues("address_line1");
+		 address2 = request.getParameterValues("address_line2");
+		 city = request.getParameterValues("city");
+		 state = request.getParameterValues("state");
+		 country =request.getParameterValues("country");
+		 pincode = request.getParameterValues("pincode");
+		 
+		 operationAddress = request.getParameterValues("operationAddress");     //operation value add or update for address
+		 addressIds = request.getParameterValues("address_id");						//address_id for update address details 
+			
 		for(int index=0; index<address1.length; index++ ) {
 			addresspojo.setAddress_line1(address1[index]);
 			addresspojo.setAddress_line2(address2[index]);
@@ -167,13 +174,13 @@ public class ControllerRegister extends HttpServlet {
 			if("updateAddress".equals(operationAddress[index])) {
 				addresspojo.setAddress_id(Integer.parseInt(addressIds[index]));
 				addresspojo.setUpdate_by(updatebyuser_id);
-				result = serviceupdate.updateAddress(addresspojo);
+				result = serviceupdate.updateAddress(addresspojo);					//call a method for update addresses
 			}else {
 				addresspojo.setUser_id(user_id);
-				result = servicesave.saveaddress(addresspojo);	
+				result = servicesave.saveaddress(addresspojo);						//call a method for insert addresses
 			}	
 		}
-		return (result ? true : false);
+		return result ? true : false;
 	}
 
 }

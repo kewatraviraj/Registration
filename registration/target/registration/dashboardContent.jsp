@@ -1,17 +1,17 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 
 	<div class="row info leftside">
-		<a href="operation?action=get&&userid=<c:out value='${sessionScope.user.user_id }' />">
+		<a href="operation?action=get&&userid=<c:out value='${sessionScope.user_id }' />">
 			<div class="bg-info mb-2 text-white well well-lg col-sm-3 col-sm-offset-1">My Details</div>
 		</a>
-		<a href="useraddress?userid=<c:out value='${sessionScope.user.user_id }' />">
+		<%-- <a href="useraddress?userid=<c:out value='${sessionScope.user.user_id }' />">
 			<div class="bg-info mb-2 text-white well well-lg col-sm-3 col-sm-offset-1">My Address</div>
 		</a>
 		<a href="userfile?action=get&&userid=<c:out value='${sessionScope.user.user_id }' />">
 			<div class="bg-info mb-2 text-white well well-lg col-sm-3 col-sm-offset-1">My Files</div>
-		</a>
+		</a> --%>
 	</div>
-	<c:if test='${sessionScope.user.role_id == 1}'>
+	<c:if test='${sessionScope.role_id == 1}'>
 	<div class="social grid">
 		<div class="grid-info">
 			<div class="col-md-3 top-comment-grid">

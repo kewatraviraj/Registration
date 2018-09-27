@@ -2,7 +2,6 @@ package com.basic.controller;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.sql.SQLException;
 import java.util.Properties;
 
 import javax.servlet.ServletException;
@@ -20,15 +19,13 @@ import com.basic.pojo.User;
  */
 public class Forgot extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-       UserService userService;
-       User userpojo;
+	static final UserService userService = new UserServiceImpl();
+    static final User userpojo = new User();
     /**
      * @see HttpServlet#HttpServlet()
      */
     public Forgot() {
-        // TODO Auto-generated constructor stub
-    	userService = new UserServiceImpl();
-    	userpojo = new User();
+        // TODO Auto-generated constructor stub  	
     }
 
 	/**
@@ -43,24 +40,17 @@ public class Forgot extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		try {
-			userpojo.setEmail(request.getParameter("email"));
+	       
+		userpojo.setEmail(request.getParameter("email"));
+		String pass = userService.getPass(userpojo);			//get password from DB for specified Email
 			
-			String pass = userService.getPass(userpojo);
-				
-			Properties prop=new Properties();
-		    InputStream input = Database.class.getClassLoader().getResourceAsStream("messages.properties");
-		    prop.load(input);
-		    input.close();
-		    
-			request.setAttribute("message", pass != null? prop.getProperty("getforgotpass")+pass : prop.getProperty("unknownforgotpass"));
-			request.getRequestDispatcher("forgot.jsp").forward(request, response);
-			
-		} catch (ClassNotFoundException | SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		Properties prop=new Properties();
+		InputStream input = Database.class.getClassLoader().getResourceAsStream("messages.properties");
+		prop.load(input);
+		input.close();
+																//set message for responce 
+		request.setAttribute("message", !("".equals(pass))? prop.getProperty("getforgotpass")+pass : prop.getProperty("unknownforgotpass"));
+		request.getRequestDispatcher("forgot.jsp").forward(request, response);
 	}
 
 }

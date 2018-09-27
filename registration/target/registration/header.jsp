@@ -26,7 +26,7 @@
 		  <ul class="nav navbar-nav navbar-right">
 			  <c:choose>
 				<c:when test='${sessionScope.user ne null}'>
-					<li style="padding-top:2%"><h3>Welcome <c:out value="${sessionScope.user.firstname }"></c:out></h3></li>
+					<li style="padding-top:2%"><h3>Welcome <c:out value="${sessionScope.firstname }"></c:out></h3></li>
 					<li style="padding-top:2%"><a href="logout" class="btn btn-primary">Logout</a></li>
 				</c:when>
 				<c:otherwise> 

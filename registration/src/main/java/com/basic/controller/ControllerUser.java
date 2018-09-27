@@ -1,8 +1,6 @@
 package com.basic.controller;
 
 import java.io.IOException;
-import java.sql.SQLException;
-
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -24,20 +22,16 @@ import com.basic.pojo.User;
  */
 public class ControllerUser extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	User userpojo;
-	DaoGetAll serviceget;
-	DaoUpdate serviceupdate;
-	DaoSave servicesave;
-	DaoDelete serviceremove;
+	static final User userpojo = new User();
+	
+	static final DaoSave servicesave = new DaoSaveImpl(); 
+	static final DaoGetAll serviceget  = new DaoGetImpl();
+	static final DaoUpdate serviceupdate = new DaoUpdateImpl();
+	static final DaoDelete serviceremove = new DaoDeleteImpl();
 	/**
      * @see HttpServlet#HttpServlet()
      */
     public ControllerUser() {
-        userpojo = new User();
-        serviceget = new DaoGetImpl();
-        serviceupdate = new DaoUpdateImpl();
-        servicesave = new DaoSaveImpl();
-        serviceremove = new DaoDeleteImpl();
     }
 
 	/**
@@ -48,22 +42,22 @@ public class ControllerUser extends HttpServlet {
 				response.setContentType("text/plain");
 		try {
 			if(request.getParameter("action").equals("get")) {
-				User user = serviceget.getUser(Integer.parseInt(request.getParameter("userid")));
-				request.setAttribute("user", user);
-				request.setAttribute("addresses", serviceget.getAddress( user.getUser_id()));
-				request.setAttribute("files", serviceget.getfile(user.getUser_id()));
+				User user = serviceget.getUser(Integer.parseInt(request.getParameter("userid")));		//get user details
+				request.setAttribute("user", user);												
+				request.setAttribute("addresses", serviceget.getAddress( user.getUser_id()));			//get address details
+				request.setAttribute("files", serviceget.getfile(user.getUser_id()));					//get file details
 				
 				request.getRequestDispatcher("register.jsp").forward(request, response);
 				
 			}else if(request.getParameter("action").equals("delete")) {
-				if(serviceremove.deleteUser(Integer.parseInt(request.getParameter("userid")))) {
+				if(serviceremove.deleteUser(Integer.parseInt(request.getParameter("userid")))) {		//delete user all details
 					response.getWriter().write(request.getParameter("userid"));
 				}else {
 					response.getWriter().write("fail");
 				}		
 			}	
 			
-		} catch (NumberFormatException | ClassNotFoundException | SQLException e) {
+		} catch (NumberFormatException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
@@ -85,21 +79,15 @@ public class ControllerUser extends HttpServlet {
 		userpojo.setGender(request.getParameter("gender"));
 		userpojo.setDate_of_birth(request.getParameter("dateofBirth"));
 		
-		try {
-			if(request.getParameter("action").equals("save")) {
-				servicesave.saveuser(userpojo);
-					
-			}else {
-				userpojo.setUser_id(Integer.parseInt(request.getParameter("userid")));
-				userpojo.setUpdate_by(((User)session.getAttribute("user")).getUser_id());
-				serviceupdate.updateUser(userpojo);	
-			}
-			
-			request.getRequestDispatcher("dashboard.jsp").forward(request, response);
-			
-		} catch (ClassNotFoundException | SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		if(request.getParameter("action").equals("save")) {
+			servicesave.saveuser(userpojo);
+				
+		}else {
+			userpojo.setUser_id(Integer.parseInt(request.getParameter("userid")));
+			userpojo.setUpdate_by((int)session.getAttribute("user_id"));
+			serviceupdate.updateUser(userpojo);	
 		}
+		
+		request.getRequestDispatcher("dashboard.jsp").forward(request, response);
 	}
 }

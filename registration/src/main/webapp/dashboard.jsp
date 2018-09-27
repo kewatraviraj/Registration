@@ -16,9 +16,9 @@
 	
 	<section class="wrapper scrollable">
 		<div class="rightside">
-		
-			<jsp:include page="dashboardContent.jsp" />
 			<div class="text-center"><c:out value="${requestScope.message }"></c:out></div>
+			<jsp:include page="dashboardContent.jsp" />
+			
 			<!-- footer -->
 			<div class="footer">
 				<p>© 2018. All Rights Reserved. Design by</p>

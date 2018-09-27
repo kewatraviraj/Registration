@@ -5,6 +5,20 @@ import java.sql.SQLException;
 
 public interface DaoDelete {
 	
-	public boolean deleteUser(int id) throws ClassNotFoundException, SQLException, IOException;
-	public boolean deleteAddress(String id) throws ClassNotFoundException, SQLException, IOException;
+	/**
+	 * @param id
+	 * @return
+	 * @throws ClassNotFoundException
+	 * @throws SQLException
+	 * @throws IOException
+	 */
+	boolean deleteUser(int id);
+	/**
+	 * @param id
+	 * @return
+	 * @throws ClassNotFoundException
+	 * @throws SQLException
+	 * @throws IOException
+	 */
+	boolean deleteAddress(String id);
 }

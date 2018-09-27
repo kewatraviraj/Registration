@@ -66,7 +66,7 @@
 								<a href="operation?action=get&&userid=<c:out value='${userdetail.user_id }' />" class="btn btn-lg label-warning hidden-xs">Edit</a>
 								<a href="operation?action=get&&userid=<c:out value='${userdetail.user_id }' />" class="edit visible-xs" data-toggle="modal"><i class="glyphicon glyphicon-edit" title="Edit"></i></a>
 						
-								<c:if test='${sessionScope.user.user_id == 1}'>							
+								<c:if test='${sessionScope.user_id == 1}'>							
 									<button data-for="<c:out value='${userdetail.user_id }'/>" type="Submit" class="btn btn-lg label-danger delete hidden-xs">Delete</button>
 									<button data-for="<c:out value='${userdetail.user_id }'/>" class="delete visible-xs" data-toggle="modal"><i class="material-icons" title="Delete">&#xE872;</i></button>
 								</c:if>
